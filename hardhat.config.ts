@@ -71,6 +71,13 @@ const config: HardhatUserConfig = {
           ? [process.env.DEPLOYER_PRIVATE_KEY_TESTNET]
           : [],
     },
+    Testnet: {
+      url: process.env.TESTNET_RPC_URL || "",
+      accounts:
+        process.env.DEPLOYER_PRIVATE_KEY_TESTNET !== undefined
+          ? [process.env.DEPLOYER_PRIVATE_KEY_TESTNET]
+          : [],
+    },
   },
   etherscan: {
     /*apiKey: {

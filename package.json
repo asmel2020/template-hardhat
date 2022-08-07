@@ -6,11 +6,11 @@
   "scripts": {
     "test": "npx hardhat test",
     "restart": "npx hardhat clean && npx hardhat compile",
-    "deploy:addContract": "yarn hardhat run scripts/deploy/addContract.ts --network avalancheTestnet",
-    "deploy:proposal": "yarn hardhat run scripts/deploy/proposal.ts --network avalancheTestnet",
-    "deploy:relay": "yarn hardhat run scripts/deploy/relay.ts --network avalancheTestnet",
+    "deploy:addContract": "yarn hardhat run scripts/deploy/addContract.ts --network Testnet",
+    "deploy:proposal": "yarn hardhat run scripts/deploy/proposal.ts --network Testnet",
+    "deploy:relay": "yarn hardhat run scripts/deploy/relay.ts --network Testnet",
     "deploy:autoTask": "yarn hardhat run scripts/deploy/autoTask.ts",
-    "deploy:autoTaskSentinel": "yarn hardhat run scripts/deploy/autoTaskSentinel.ts --network avalancheTestnet"
+    "deploy:autoTaskSentinel": "yarn hardhat run scripts/deploy/autoTaskSentinel.ts --network Testnet"
   },
   "author": "Danny Jesus Gonzalez Galicia",
   "license": "MIT",
