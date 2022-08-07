@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npx hardhat test",
     "restart": "npx hardhat clean && npx hardhat compile",
+    "autoTask:Compile": "tsc --project tsconfig.cloud.json",
     "deploy:addContract": "yarn hardhat run scripts/deploy/addContract.ts --network Testnet",
     "deploy:proposal": "yarn hardhat run scripts/deploy/proposal.ts --network Testnet",
     "deploy:relay": "yarn hardhat run scripts/deploy/relay.ts --network Testnet",
@@ -31,7 +32,7 @@
     "hardhat": "^2.10.1",
     "hardhat-abi-exporter": "^2.10.0",
     "hardhat-gas-reporter": "^1.0.8",
-    "hardhat-openzeppelin-defender": "^1.1.1",
+    "hardhat-openzeppelin-defender": "^1.2.3",
     "i": "^0.3.7",
     "npm": "^8.15.1",
     "solidity-coverage": "^0.7.21",

@@ -4,264 +4,272 @@ example of use of the plugin to implement the openzeppeling defender modules thr
 
 ## Installation
 
-`$ npm install`
+```
+$ npm install
+```
 
 or
 
-`$ yarn install`
+```
+$ yarn install
+```
 
 enter environment variables
 
-		TESTNET_RPC_URL=
-		DEPLOYER_PRIVATE_KEY_TESTNET=
-		//Openzeppelin Defender Credential admin
-		API_KEY=
-		API_SECRET=
-
+```JS
+TESTNET_RPC_URL=
+DEPLOYER_PRIVATE_KEY_TESTNET=
+//Openzeppelin Defender Credential admin
+API_KEY=
+API_SECRET=
+```
 # Example Of Use
 ### Example 1
 MyToken smart contract deployment and add to openzeppelin admin module
 
-	import { ethers,OpenzeppelinDefender } from "hardhat";
+```JS
+import { ethers,OpenzeppelinDefender } from "hardhat";
 
-	async function main() {
+async function main() {
 	
-		const contractName='MyToken'
+  const contractName='MyToken'
 		
-		const {chainId}=await ethers.provider.getNetwork()
+  const {chainId}=await ethers.provider.getNetwork()
 		
-		const Contract = await ethers.getContractFactory(contractName);
+  const Contract = await ethers.getContractFactory(contractName);
 		
-		const contract = await Contract.deploy();
+  const contract = await Contract.deploy();
 		
-		const {interface:abi,address}=await contract.deployed();
+  const {interface:abi,address}=await contract.deployed();
 		
-		//get the abi in json string using the contract interface
+  //get the abi in json string using the contract interface
+  const AbiJsonString= OpenzeppelinDefender.Utils.AbiJsonString(abi)
 		
-		const AbiJsonString= OpenzeppelinDefender.Utils.AbiJsonString(abi)
-		
-		//Obtaining the name of the network through the chainId of the network
-		const networkName = await OpenzeppelinDefender.Utils.fromChainId(chainId);
+  //Obtaining the name of the network through the chainId of the network
+  const networkName = await OpenzeppelinDefender.Utils.fromChainId(chainId);
 
-		//add the contract to the admin
-		const option:any={
-			network:networkName ,
-			address: address,
-			name: contractName,
-			abi:AbiJsonString
-		}
+  //add the contract to the admin
+  const option={
+    network:networkName ,
+    address: address,
+    name: contractName,
+    abi:AbiJsonString
+  }
 		
-		const result=await OpenzeppelinDefender.AdminClient.addContract(option);
-		
-		console.log(result);
-	}
+  await OpenzeppelinDefender.AdminClient.addContract(option);
+}
+```
 
 run the example using the command
 
-`$ yarn deploy:addContract`
+```
+$ yarn deploy:addContract
+```
 
 ### Example 2
 Add MyToken to module admin and create a proposal
 
-	import { ethers, OpenzeppelinDefender } from "hardhat";
+```JS
+import { ethers, OpenzeppelinDefender } from "hardhat";
 
-	async function main() {
-		const contractName = "MyToken";
+async function main() {
+
+  const contractName = "MyToken";
 		
-		const {chainId}=await ethers.provider.getNetwork()
+  const {chainId}=await ethers.provider.getNetwork()
 		
-		const [owner] = await ethers.getSigners();
+  const [owner] = await ethers.getSigners();
 		
-		const Contract = await ethers.getContractFactory(contractName);
+  const Contract = await ethers.getContractFactory(contractName);
 		
-		const contract = await Contract.deploy();
+  const contract = await Contract.deploy();
 		
-		const { interface: abi, address} = await contract.deployed();
+  const { interface: abi, address} = await contract.deployed();
 		
-		//obtaining the parameters of an event or function through the contract interface
-		const params: any = {
-			abiInterface: abi,
-			name: "Transfer",
-			type: "event",
-		};
+  //obtaining the parameters of an event or function through the contract interface
+  const params= {
+    abiInterface: abi,
+    name: "Transfer",
+    type: "event",
+  };
 		
-		const {inputs,name} =OpenzeppelinDefender.Utils.getAbiInterfaceParams(params);
+  const {inputs,name} =OpenzeppelinDefender.Utils.getAbiInterfaceParams(params);
 		
-		//adding a new contract to the admin and creating a proposal
-		const option: any = {
-			contract: {
-				network: await OpenzeppelinDefender.Utils.fromChainId(chainId),
-				address: address,
-				name:contractName,
-				abi: abi.format(ethers.utils.FormatTypes.json)
-			},
-			title: "Mint token",
-			description: "minter 10 new tokens",
-			type: "custom", 
-			functionInterface: {
-				name: name,
-				inputs: inputs,
-			},
-			functionInputs: [owner.address,"100000000000000000000"],
-			via: owner.address,
-			viaType:'EOA'
-		};
+  //adding a new contract to the admin and creating a proposal
+  const option= {
+    contract: {
+      network: await OpenzeppelinDefender.Utils.fromChainId(chainId),
+      address: address,
+      name:contractName,
+      abi: abi.format(ethers.utils.FormatTypes.json)
+    },
+    title: "Mint token",
+    description: "minter 10 new tokens",
+    type: "custom", 
+    functionInterface: {
+      name: name,
+      inputs: inputs,
+    },
+    functionInputs: [owner.address,"100000000000000000000"],
+    via: owner.address,
+    viaType:'EOA'
+  };
 		
-		const result =await OpenzeppelinDefender.AdminClient.createProposal(option);
-		console.log(result);
-	}
+  await OpenzeppelinDefender.AdminClient.createProposal(option);
+}
+```
 
 run the example using the command
-
-`$ yarn deploy:proposal`
+```
+$ yarn deploy:proposal
+```
 
 ### Example 3
 Creation of a relay and use of its address so that it assumes the MINTER_ROLE in the MyNft contract
 
-	import { ethers, OpenzeppelinDefender } from "hardhat";
+```JS
+import { ethers, OpenzeppelinDefender } from "hardhat";
 
-	async function main() {
+async function main() {
  
-		const contractName = "MyNFT";
+  const contractName = "MyNFT";
 
-		const {chainId}=await ethers.provider.getNetwork()
+  const {chainId}=await ethers.provider.getNetwork()
 
-		//relay creation
-		const RelayParams:any={
-			name:'Relay_1',
-			network: await OpenzeppelinDefender.Utils.fromChainId(chainId),
-			minBalance: BigInt(1e18).toString(),
-		};
+	//relay creation
+  const RelayParams={
+    name:'Relay_1',
+    network: await OpenzeppelinDefender.Utils.fromChainId(chainId),
+    minBalance: BigInt(1e18).toString(),
+  };
 
-		const {address:addressRelay}=await OpenzeppelinDefender.RelayClient.create(RelayParams);
+  const {address:addressRelay}=await OpenzeppelinDefender.RelayClient.create(RelayParams);
 
-		const Contract = await ethers.getContractFactory(contractName);
+  const Contract = await ethers.getContractFactory(contractName);
 
-		//pass its address as a parameter so that it assumes MINTER_ROLE
-		const contract = await Contract.deploy(addressRelay);
+  //pass its address as a parameter so that it assumes MINTER_ROLE
+  const contract = await Contract.deploy(addressRelay);
 		
-		const { interface: abi, address} =await contract.deployed();
+  const { interface: abi, address} =await contract.deployed();
 		
-		//add the contract to the admin
+  //add the contract to the admin	
+  const option={
+    network:await OpenzeppelinDefender.Utils.fromChainId(chainId),
+    address: address,
+    name: contractName,
+    abi: abi.format(ethers.utils.FormatTypes.json)
+  }
 		
-		const option:any={
-			network:await OpenzeppelinDefender.Utils.fromChainId(chainId),
-			address: address,
-			name: contractName,
-			abi: abi.format(ethers.utils.FormatTypes.json)
-		}
-		
-		await OpenzeppelinDefender.AdminClient.addContract(option);
-	}
+  await OpenzeppelinDefender.AdminClient.addContract(option);
+}
+```
 
 run the example using the command
-
-`$ yarn deploy:relay`
-
+```
+$ yarn deploy:relay
+```
 ### Example 4
 creating an autoTask
 
-	import {OpenzeppelinDefender} from "hardhat";
+```JS
+import {OpenzeppelinDefender} from "hardhat";
 
-	async function main() {
+async function main() {
 
-		const autoTaskOptions: any = {
-			name: "exampleAutoTask",
-			encodedZippedCode: await OpenzeppelinDefender.AutoTaskClint.getEncodedZippedCodeFromFolder(
-        "./openzeppelinDefender/autoTasks/exampleAutoTask"
-      ),
-			trigger: {
-				type: "webhook",
-				},
-				paused: false,
-		};
+  const autoTaskOptions: any = {
+    name: "exampleAutoTask",
+    encodedZippedCode: await OpenzeppelinDefender.AutoTaskClint.getEncodedZippedCodeFromFolder("./openzeppelinDefender/autoTasks?exampleAutoTask"),
+    trigger: {
+      type: "webhook",
+    },
+    paused: false,
+  };
   
-		const autotask  = await OpenzeppelinDefender.AutoTaskClint.create(autoTaskOptions);
-
-		console.log(autotask)
-	}
+  await OpenzeppelinDefender.AutoTaskClint.create(autoTaskOptions);
+}
+```
 
 run the example using the command
 
-`$ yarn deploy:autoTask`
-
+```
+$ yarn deploy:autoTask
+```
 ### Example 5
 Creating a sentinel, to track all Transfer events of the Mytoken smart contract and assigning an autoTaskTrigger via its autoTaskId to the sentinel
 
-	import { ethers, OpenzeppelinDefender } from "hardhat";
+```JS
+import { ethers, OpenzeppelinDefender } from "hardhat";
 
-	async function main() {
-		const contractName = "MyToken";
+async function main() {
 
-		const { chainId } = await ethers.provider.getNetwork();
+  const contractName = "MyToken";
 
-		//deployment of the smart contract MyToken
-		const Contract = await ethers.getContractFactory(contractName);
+  const { chainId } = await ethers.provider.getNetwork();
+
+  //deployment of the smart contract MyToken
+  const Contract = await ethers.getContractFactory(contractName);
 		
-		const contract = await Contract.deploy();
+  const contract = await Contract.deploy();
 		
-		const { interface: abi, address, provider } = await contract.deployed();
-		//getting the eventSignature from the Transfer event
+  const { interface: abi, address, provider } = await contract.deployed();
+
+  //getting the eventSignature from the Transfer event		
+  const params= {
+    abiInterface: abi,
+    name: "Transfer",
+    type: "event",
+  };
 		
-		const params: any = {
-			abiInterface: abi,
-			name: "Transfer",
-			type: "event",
-  		};
+  const {signature} =OpenzeppelinDefender.Utils.getAbiInterfaceParams(params);
 		
-		const {signature} =OpenzeppelinDefender.Utils.getAbiInterfaceParams(params);
+  //Obtaining the name of the network through the chainId of the network
+  const networkName = await OpenzeppelinDefender.Utils.fromChainId(chainId);
 		
-		//Obtaining the name of the network through the chainId of the network
-		const networkName = await OpenzeppelinDefender.Utils.fromChainId(chainId);
+  //get the abi in json string using the contract interface
+  const abiJsonString=OpenzeppelinDefender.Utils.AbiJsonString(abi);
 		
-		//get the abi in json string using the contract interface
-		const abiJsonString=OpenzeppelinDefender.Utils.AbiJsonString(abi);
+  //add the contract to the admin
+  const addContractOptions= {
+    network: networkName,
+    address: address,
+    name: contractName,
+    abi: abiJsonString,
+  };
 		
-		//add the contract to the admin
-		const addContractOptions: any = {
-			network: networkName,
-			address: address,
-			name: contractName,
-			abi: abiJsonString,
-		};
+  await OpenzeppelinDefender.AdminClient.addContract(addContractOptions);
 		
-		await OpenzeppelinDefender.AdminClient.addContract(addContractOptions);
+  //creating an autoTask
+  const autoTaskOptions= {
+    name: "exampleAutoTask",
+    encodedZippedCode: await OpenzeppelinDefender.AutoTaskClint.getEncodedZippedCodeFromFolder("./openzeppelinDefender/autoTasks/exampleAutoTask"),
+    trigger: {
+     type: "webhook",
+    },
+    paused: false,
+  };
 		
-		//creating an autoTask
-		const autoTaskOptions: any = {
-			name: "exampleAutoTask",
-			encodedZippedCode: await OpenzeppelinDefender.AutoTaskClint.getEncodedZippedCodeFromFolder(
-        "./openzeppelinDefender/autoTasks/exampleAutoTask"
-      ),
-			trigger: {
-				type: "webhook",
-			},
-			paused: false,
-		};
+  const { autotaskId } = await OpenzeppelinDefender.AutoTaskClint.create(autoTaskOptions);
 		
-		const { autotaskId } = await OpenzeppelinDefender.AutoTaskClint.create(autoTaskOptions);
-		
-		//creating a sentinel and assigning an autoTaskTrigger via its autoTaskId
-		const sentinelOptions: any = {
-			type: "BLOCK",
-			network: networkName,
-			confirmLevel: 12,
-			name: "Sentinel",
-			addresses: [address],
-			abi: abiJsonString,
-			paused: false,
-			eventConditions: [signature],
-			autotaskTrigger: autotaskId,
-			notificationChannels: [""],
-		};
-		
-		const result = await OpenzeppelinDefender.SentinelClient.create(sentinelOptions);
-		
-		console.log(result);
-	}
+  //creating a sentinel and assigning an autoTaskTrigger via its autoTaskId
+  const sentinelOptions= {
+    type: "BLOCK",
+    network: networkName,
+    confirmLevel: 12,
+    name: "Sentinel",
+    addresses: [address],
+    abi: abiJsonString,
+    paused: false,
+    eventConditions: [signature],
+    autotaskTrigger: autotaskId,
+    notificationChannels: [""],
+  };
+
+  await OpenzeppelinDefender.SentinelClient.create(sentinelOptions);	
+}
+```
 
 run the example using the command
-
-`$ deploy:autoTaskSentinel`
-
+```
+$ yarn deploy:autoTaskSentinel
+```
 
