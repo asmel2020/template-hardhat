@@ -12,7 +12,7 @@ or
 
 enter environment variables
 
-		AVALANCHE_TESTNET_RPC_URL=
+		TESTNET_RPC_URL=
 		DEPLOYER_PRIVATE_KEY_TESTNET=
 		//Openzeppelin Defender Credential admin
 		API_KEY=
