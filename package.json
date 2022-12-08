@@ -6,12 +6,10 @@
   "scripts": {
     "test": "npx hardhat test",
     "restart": "npx hardhat clean && npx hardhat compile",
-    "autoTask:Compile": "tsc --project tsconfig.cloud.json",
-    "deploy:addContract": "yarn hardhat run scripts/deploy/addContract.ts --network Testnet",
-    "deploy:proposal": "yarn hardhat run scripts/deploy/proposal.ts --network Testnet",
-    "deploy:relay": "yarn hardhat run scripts/deploy/relay.ts --network Testnet",
-    "deploy:autoTask": "yarn hardhat run scripts/deploy/autoTask.ts",
-    "deploy:autoTaskSentinel": "yarn hardhat run scripts/deploy/autoTaskSentinel.ts --network Testnet"
+    "deploy:BusdFake": "yarn hardhat run scripts/deploy/BusdFake.ts --network",
+    "deploy:IdealCoins": "yarn hardhat run scripts/deploy/IdealCoins.ts --network",
+    "deploy:Staking": "yarn hardhat run scripts/deploy/Staking.ts --network",
+    "update:Staking": "yarn hardhat run scripts/deploy/UpdateStaking.ts --network"
   },
   "author": "Danny Jesus Gonzalez Galicia",
   "license": "MIT",
