@@ -3,7 +3,7 @@ import { useAccount, useContractRead } from "wagmi";
 import stacking from "../util/abi/Stacking";
 import { bscTestnet } from "wagmi/chains";
 import Address from "../util/contractAddress/Address";
-import { Stack } from "react-bootstrap";
+import date from 'date-and-time';
 
 export const InvestorInfo = () => {
   const [first, setfirst] = useState<any>();
@@ -29,8 +29,10 @@ export const InvestorInfo = () => {
         <div>invested Amount : {first?.investedAmount.toString()}</div>
         <div>investment Time Plan : {first?.investmentTimePlan.toString()}</div>
         <div>investment Plan : {first?.investmentPlan.toString()}</div>
-        <div>start Investment : {new Date(first?.startInvestment.toNumber()).toUTCString()}</div>
-        <div>end Investment : {new Date(first?.endInvestment.toNumber()).toUTCString()}</div>
+        <div>start Investment : {first?.startInvestment.toNumber()}</div>
+        <div>end Investment : {first?.endInvestment.toString()}</div>
+        {/* <div>start Investment : {date.format(new Date(first?.startInvestment.toString() || 0), 'YYYY/MM/DD HH:mm:ss')}</div>
+        <div>end Investment : {new Date(first?.endInvestment.toNumber()).toUTCString()}</div> */}
         <div>referral 1 : {first?.referralLv1.toString()}</div>
         <div>referral 2 : {first?.referralLv2.toString()}</div>
         <div>Withdraw : {first?.isWithdraw ? "si" : "no"}</div>
