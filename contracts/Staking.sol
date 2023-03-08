@@ -14,7 +14,7 @@ contract Staking is
 {
     IERC20 public tokenRewars;
 
-    IERC20 public busd;
+    IERC20 public usdt;
 
     address public vault;
 
@@ -40,12 +40,13 @@ contract Staking is
         _disableInitializers();
     }
 
-    function initialize() public initializer {
+    function initialize(address _usdt,address _tokenRewars) public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
+
         vault = 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65;
-        busd = IERC20(0x2F922ddce94fb3d53C6F1f68cfB1688CFf0A78Ae); //local 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
-        tokenRewars= IERC20(0xb569fE5C64CFfd62F66e7A666c5c223d70573845);
+        usdt = IERC20(_usdt); //local 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+        tokenRewars= IERC20(_tokenRewars);
 
         amountBounty= 150;
 
@@ -140,7 +141,7 @@ contract Staking is
         );
 
         require(
-            busd.allowance(msg.sender, address(this)) >= _investedAmount,
+            usdt.allowance(msg.sender, address(this)) >= _investedAmount,
             "error allowance"
         );
 
@@ -228,7 +229,7 @@ contract Staking is
         );
 
         require(
-            busd.allowance(msg.sender, address(this)) >= _investedAmount,
+            usdt.allowance(msg.sender, address(this)) >= _investedAmount,
             "error allowance"
         );
 
@@ -317,7 +318,7 @@ contract Staking is
 
         investor.isWithdraw = true;
 
-        busd.transfer( msg.sender, amountBUSD);
+        usdt.transfer( msg.sender, amountBUSD);
 
         tokenRewars.transfer(msg.sender, amountRewars);
     }
@@ -396,7 +397,7 @@ contract Staking is
     }
 
     function _transferToken(uint256 amount, address to) internal {
-        busd.transferFrom(msg.sender, to, amount);
+        usdt.transferFrom(msg.sender, to, amount);
     }
 
     function withdrawToken(address token,uint256 amount, address to) public onlyOwner {

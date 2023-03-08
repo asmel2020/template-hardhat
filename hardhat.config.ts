@@ -119,11 +119,11 @@ const config: HardhatUserConfig = {
   etherscan: {
   apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY || "",
-      goerli: process.env.ETHERSCAN_API_KEY || "",
-      bsc: process.env.BSCSCAN_API_KEY || "" ,
-      bscTestnet:process.env.BSCSCAN_API_KEY || "" ,
-      avalanche: process.env.AVALANCHE_API_KEY || "" ,
-      avalancheTestnet: process.env.AVALANCHE_API_KEY || "" ,
+      //goerli: process.env.ETHERSCAN_API_KEY || "",
+      bsc: "XPWC1NGB3UAWGCMVRMU1RW9U46YMZPEH5F" ,
+      bscTestnet:"XPWC1NGB3UAWGCMVRMU1RW9U46YMZPEH5F" ,
+      //avalanche: process.env.AVALANCHE_API_KEY || "" ,
+      //avalancheTestnet: process.env.AVALANCHE_API_KEY || "" ,
       polygon: process.env.POLYGONSCAN_API_KEY || "" ,
       polygonMumbai: process.env.POLYGONSCAN_API_KEY || "" ,
     },
@@ -143,8 +143,10 @@ const config: HardhatUserConfig = {
     apiSecret:process.env.API_SECRET || "",
   },
   gasReporter: {
-    enabled:false,
+    enabled:true,
+    currency: 'eth',
     coinmarketcap:"430f2a86-2588-49e2-be39-0bef66418ddc",
+    gasPrice: 5
   }
 };
 

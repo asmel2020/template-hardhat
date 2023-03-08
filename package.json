@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "npx hardhat test",
+    "test:tokens": "npx hardhat test test/IdealCoin.ts",
     "restart": "npx hardhat clean && npx hardhat compile",
     "deploy:BusdFake": "yarn hardhat run scripts/deploy/BusdFake.ts --network",
-    "deploy:IdealCoins": "yarn hardhat run scripts/deploy/IdealCoins.ts --network",
+    "deploy:IdealCoins": "yarn hardhat run scripts/deploy/IdealCoin.ts --network bsc",
+    "deploy:IdealCoinsTest": "yarn hardhat run scripts/deploy/IdealCoin.ts --network bscTestnet",
+    "deploy:testNet": "yarn hardhat run scripts/deploy/testNet.ts --network bscTestnet",
     "deploy:Staking": "yarn hardhat run scripts/deploy/Staking.ts --network",
     "update:Staking": "yarn hardhat run scripts/deploy/UpdateStaking.ts --network"
   },
