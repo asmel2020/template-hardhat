@@ -7,6 +7,11 @@ import date from 'date-and-time';
 
 export const InvestorInfo = () => {
   const [first, setfirst] = useState<any>();
+
+  const [dateInvesting, setDateInvesting] = useState<any>({
+    startInvestment:new Date(),
+    endInvestment:new Date()
+  });
   const { address, isDisconnected } = useAccount();
 
   const { data, status }: any = useContractRead({
@@ -19,7 +24,12 @@ export const InvestorInfo = () => {
 
   useEffect(() => {
     if (status === "success") {
+      
       setfirst(data);
+      setDateInvesting({
+        startInvestment:new Date(data['startInvestment'].toNumber()*1000),
+        endInvestment:new Date(data['endInvestment'].toNumber()*1000)
+      })
     }
   }, [status]);
 
@@ -29,8 +39,8 @@ export const InvestorInfo = () => {
         <div>invested Amount : {first?.investedAmount.toString()}</div>
         <div>investment Time Plan : {first?.investmentTimePlan.toString()}</div>
         <div>investment Plan : {first?.investmentPlan.toString()}</div>
-        <div>start Investment : {first?.startInvestment.toNumber()}</div>
-        <div>end Investment : {first?.endInvestment.toString()}</div>
+        <div>start Investment : {date.format(dateInvesting.startInvestment, 'YYYY/MM/DD HH:mm:ss')}</div>
+        <div>end Investment : {date.format(dateInvesting.endInvestment, 'YYYY/MM/DD HH:mm:ss')}</div>
         {/* <div>start Investment : {date.format(new Date(first?.startInvestment.toString() || 0), 'YYYY/MM/DD HH:mm:ss')}</div>
         <div>end Investment : {new Date(first?.endInvestment.toNumber()).toUTCString()}</div> */}
         <div>referral 1 : {first?.referralLv1.toString()}</div>
