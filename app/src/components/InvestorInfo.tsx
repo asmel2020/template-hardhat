@@ -4,6 +4,7 @@ import stacking from "../util/abi/Stacking";
 import { bscTestnet } from "wagmi/chains";
 import Address from "../util/contractAddress/Address";
 import date from 'date-and-time';
+import { ethers } from 'ethers';
 
 export const InvestorInfo = () => {
   const [first, setfirst] = useState<any>();
@@ -12,6 +13,7 @@ export const InvestorInfo = () => {
     startInvestment:new Date(),
     endInvestment:new Date()
   });
+  
   const { address, isDisconnected } = useAccount();
 
   const { data, status }: any = useContractRead({
@@ -36,7 +38,7 @@ export const InvestorInfo = () => {
   return (
       <>
         <div className="my-3">Investor</div>
-        <div>invested Amount : {first?.investedAmount.toString()}</div>
+        <div>invested Amount : {ethers.utils.formatEther(first?.investedAmount.toString() || '0')}</div>
         <div>investment Time Plan : {first?.investmentTimePlan.toString()}</div>
         <div>investment Plan : {first?.investmentPlan.toString()}</div>
         <div>start Investment : {date.format(dateInvesting.startInvestment, 'YYYY/MM/DD HH:mm:ss')}</div>

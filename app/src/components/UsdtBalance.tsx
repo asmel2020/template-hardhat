@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import erc20 from "../util/abi/ERC20";
 import { useAccount, useContractRead } from "wagmi";
 import { bscTestnet } from "wagmi/chains";
+import { ethers } from "ethers";
 
 export const UsdtBalance = () => {
   const [balance, setBalance] = useState<string>("");
@@ -28,5 +29,5 @@ export const UsdtBalance = () => {
     }
   }, [isDisconnected]);
   
-  return <div>balance Usdt : {balance}</div>;
+  return <div>balance Usdt : {ethers.utils.formatEther(balance || '0')}</div>;
 };

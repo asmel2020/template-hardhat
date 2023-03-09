@@ -6,6 +6,7 @@ import { bscTestnet } from "wagmi/chains";
 import { IdealCoinsBalance } from "./IdealCoinsBalance";
 import { UsdtBalance } from "./UsdtBalance";
 import { InvestorInfo } from "./InvestorInfo";
+import { BountyInfo } from "./BountyInfo";
 export const InfoUser = () => {
 
   const {address} = useAccount();
@@ -15,6 +16,7 @@ export const InfoUser = () => {
       <IdealCoinsBalance />
       <UsdtBalance />
       <InvestorInfo />
+      <BountyInfo />
     </div>
   );
 };
