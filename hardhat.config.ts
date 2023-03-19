@@ -128,7 +128,7 @@ const config: HardhatUserConfig = {
       polygonMumbai: process.env.POLYGONSCAN_API_KEY || "" ,
     },
   },
-  /*abiExporter: {
+  abiExporter: {
     path: './abis',
     runOnCompile: true,
     clear: true,
@@ -137,7 +137,7 @@ const config: HardhatUserConfig = {
     spacing: 2,
     //pretty: true,
     format: "json",
-  },*/
+  },
   OpenzeppelinDefenderCredential: {
     apiKey: process.env.API_KEY || "",
     apiSecret:process.env.API_SECRET || "",

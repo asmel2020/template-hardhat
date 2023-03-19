@@ -1,17 +1,6 @@
-import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-import { expect } from "chai";
-import { ethers, OpenzeppelinDefender, upgrades } from "hardhat";
-import { Contract } from "ethers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { ethers} from "hardhat";
 
-let staking: Contract;
-let busdFake: Contract;
-let wallet1: SignerWithAddress;
-let wallet2: SignerWithAddress;
-let wallet3: SignerWithAddress;
-let wallet4: SignerWithAddress;
-let vault: SignerWithAddress;
+
 describe("IdealCoin", function () {
 
   
